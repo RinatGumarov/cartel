@@ -1,4 +1,6 @@
 let instance;
+const models = require('../../../core/models');
+const Op = models.sequelize.Op;
 
 class UserService {
     
@@ -12,6 +14,18 @@ class UserService {
             return [];
         }
         return languages;
+    }
+
+    async findAllByFilter(filter) {
+        filter = `%${filter}%`;
+        return await models.users.findAll({
+            where: {
+                login: {
+                    [Op.like]: filter
+                }
+            },
+            limit: 5,
+        })
     }
     
 }

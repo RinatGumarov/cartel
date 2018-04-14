@@ -1,4 +1,5 @@
 const messageService = require('../services/messageService');
+const chatService = require('../services/chatService');
 const logger = require('../../../utils/logger');
 
 module.exports.func = (router) => {
@@ -16,7 +17,12 @@ module.exports.func = (router) => {
     
     router.post('/create', async (req, res) => {
         try {
-            let message = await messageService.sendMessageToChat(req.user, req.body.chatId, req.body.text);
+            let chatId = req.body.chatId;
+            let interlocutorId = req.body.interlocutorId;
+            if (!chatId && interlocutorId){
+                chatId = (await chatService.findOrCreate([req.user.id, interlocutorId])).id
+            }
+            let message = await messageService.sendMessageToChat(req.user, chatId, req.body.text);
             res.json(message)
         } catch (err) {
             logger.error(err.stack);

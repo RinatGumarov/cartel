@@ -2,6 +2,10 @@ module.exports = (sequelize, DataTypes) => {
     
     let chats = sequelize.define('chats', {
         name: DataTypes.BIGINT,
+        photoPath: {
+            type: DataTypes.STRING,
+            field: 'photo_path'
+        },
         isGroup: {
             type: DataTypes.BOOLEAN,
             field: 'is_group'

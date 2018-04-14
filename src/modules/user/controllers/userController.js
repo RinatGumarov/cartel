@@ -1,6 +1,4 @@
 const userService = require('../services/userService');
-const employeeSearchService = require('../../employee/services/employeeSearchService');
-const vacancySearchService = require('../../company/services/vacancySearchService');
 
 const logger = require('../../../utils/logger');
 
@@ -18,20 +16,32 @@ module.exports.func = (router) => {
     
     router.get('/search', async (req, res) => {
         try {
-            let params = JSON.parse(decodeURIComponent(req.query.filters));
-            let result = [];
-            if (params.type === "employees") {
-                result = await employeeSearchService.search(params);
-            } else if (params.type === "vacancies") {
-                result = await vacancySearchService.search(params);
-            }
-            res.json(result);
-            
+            let filter = req.body.filter;
+            return res.json(await userService.findAllByFilter(filter));
         } catch (err) {
             console.log(err.stack);
             return res.status(500).send({error: 'search error'});
         }
     });
+
+    router.get('/find', async (req, res) => {
+        let users = await userService.findAllByFilter(req.query.filter);
+        res.send(users);
+    });
+
+    router.get('/edit', async (req, res) => {
+        try {
+            return res.json(await req.user);
+        } catch (err) {
+            logger.error(err.stack)
+        }
+    });
+
+    // router.post('/edit', async (req, res) => {
+    //     try {
+    //
+    //     }
+    // });
     
     
     return router;

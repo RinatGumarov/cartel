@@ -12,8 +12,12 @@ module.exports = {
             name: {
                 type: Sequelize.STRING,
             },
+            photo_path: {
+                type: Sequelize.STRING,
+            },
             is_group: {
-                type: Sequelize.BOOLEAN
+                type: Sequelize.BOOLEAN,
+                default: false
             }
         })
     },

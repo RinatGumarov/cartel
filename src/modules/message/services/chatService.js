@@ -28,11 +28,59 @@ class ChatService {
         chat = chat[0];
 
         if (!chat) {
-            chat = await Chats.create({ status: 1 });
+            chat = await Chats.create({});
             await chat.addUsers(userIdArray);
         }
 
         return chat;
+    }
+
+    /**
+     * create chat between users
+     * @returns {Promise<Model>}
+     * @param name
+     */
+    async save(name) {
+        let options = {};
+        if (name){
+            options.name = name;
+            options.isGroup = true
+        } else {
+            options.isGroup = false;
+        }
+        return await Chats.create(options);
+    }
+
+    async addUserToChat(chat, user) {
+        await chat.addUser(user);
+    }
+
+    async findDirectChatWithOrCreate(user, interlocutor){
+        let chats = await models.users.findOne({
+            where: {
+                id: {
+                    [Op.eq]: user.id,
+                }
+            },
+            include: [{
+                model: models.chats,
+                where: {
+                    isGroup: {
+                        [Op.eq]: false
+                    },
+                },
+            }]
+        });
+        let chat;
+        // for (i = 0; i < chats.length; ++i) {
+        //
+        // }
+        if (!chat) {
+            chat = await Chats.create({});
+            chat.addUser(user);
+            chat.addUser(interlocutor);
+        }
+        return chats
     }
     
     /**

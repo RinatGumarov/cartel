@@ -9,7 +9,8 @@ module.exports = {
                 autoIncrement: true,
                 type: Sequelize.BIGINT
             },
-            name: {
+            login: {
+                unique: true,
                 type: Sequelize.STRING,
                 allowNull: false
             },

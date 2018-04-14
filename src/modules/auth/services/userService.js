@@ -11,40 +11,6 @@ let instance;
 
 class UsersService {
     
-    async getUserByCompanyId(companyId) {
-        let user = await Users.findOne({
-            include: [{
-                required: true,
-                attributes: [],
-                model: models.companies,
-                where: {
-                    id: {
-                        [Op.eq]: companyId
-                    }
-                }
-            }]
-        });
-        
-        return user;
-    }
-    
-    async getUserByEmployeeId(employeeId) {
-        let user = await Users.findOne({
-            include: [{
-                required: true,
-                attributes: [],
-                model: models.employees,
-                where: {
-                    id: {
-                        [Op.eq]: employeeId
-                    }
-                }
-            }]
-        });
-        
-        return user;
-    }
-    
     /**
      * @param email
      * @returns {Promise<boolean>}
@@ -66,16 +32,6 @@ class UsersService {
      */
     async getUserById(id) {
         let user = await Users.findOne({
-            include: [
-                models.roles,
-                {
-                    required: false,
-                    model: models.employees,
-                },
-                {
-                    required: false,
-                    model: models.companies,
-                }],
             where: {
                 id: {
                     [Op.eq]: id
@@ -83,7 +39,7 @@ class UsersService {
             }
         });
         
-        return this.changeUserRole(user);
+        return user;
     }
     
     /**
@@ -111,61 +67,25 @@ class UsersService {
      */
     async getUserByEmail(email) {
         let user = await Users.findOne({
-            include: [
-                models.roles,
-                {
-                    required: false,
-                    model: models.employees,
-                },
-                {
-                    required: false,
-                    model: models.companies,
-                }],
             where: {
                 email: {
                     [Op.eq]: email
                 }
             }
         });
-        return this.changeUserRole(user);
-    }
-    
-    /**
-     * Трансформирует роль в нормальный вид
-     * @param user
-     * @returns {*}
-     */
-    changeUserRole(user) {
-        if (user) {
-            user.role = user.role.role;
-        }
         return user;
-    }
-    
-    /**
-     * @param user
-     * @returns {Promise<*>}
-     */
-    async incrementStep(user) {
-        return await user.increment('status', {by: 1});
     }
     
     /**
      * @param email
-     * @param password
-     * @param roleName
-     * @param status
-     * @param encryptedKey
-     * @param keyPassword
-     * @param accountAddress
+     * @param login
      * @returns {Promise<*>}
      */
-    async saveUser(email, name) {
-        let user = await Users.create({
+    async saveUser(email, login) {
+        return await Users.create({
             email,
-            name
+            login
         });
-        return user;
     }
     
     

@@ -1,6 +1,5 @@
 SELECT
-  chats.id,
-  chats.status
+  chats.id
 FROM
   (SELECT
      chats.*,

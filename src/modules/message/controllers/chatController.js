@@ -12,6 +12,16 @@ module.exports.func = (router) => {
             res.status(500).json({error: err});
         }
     });
+
+    router.post('chats/create', async (req, res) => {
+        let name = req.body.name;
+        let users = req.body.users;
+        let chat = await chatService.save(name);
+        for (i = 0; i < users.length; ++i) {
+            await chatService.addUserToChat(chat, users[i]);
+        }
+        return res.send({data: 'success'});
+    });
     
     return router;
     
