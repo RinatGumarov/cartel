@@ -16,18 +16,36 @@ class UserService {
         return languages;
     }
 
-    async findAllByFilter(filter) {
+    async findAllByFilter(filter, user) {
         filter = `%${filter}%`;
         return await models.users.findAll({
             where: {
                 login: {
                     [Op.like]: filter
+                },
+                id: {
+                    [Op.ne]: user.id
                 }
             },
-            limit: 5,
+            limit: 10,
         })
     }
-    
+
+    /**
+     * @param id
+     * @returns {Promise<Model>}
+     */
+    async getUserById(id) {
+        let user = await Users.findOne({
+            where: {
+                id: {
+                    [Op.eq]: id
+                }
+            }
+        });
+
+        return user;
+    }
 }
 
 if (typeof instance !== UserService) {

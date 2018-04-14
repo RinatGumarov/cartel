@@ -13,17 +13,18 @@ module.exports.func = (router) => {
         }
     });
 
-    router.post('chats/create', async (req, res) => {
+    router.post('/chats/create', async (req, res) => {
         let name = req.body.name;
         let users = req.body.users;
+        users.push(req.user.id);
         let chat = await chatService.save(name);
         for (i = 0; i < users.length; ++i) {
-            await chatService.addUserToChat(chat, users[i]);
+            await chatService.addUserToChat(chat, parseInt(users[i]));
         }
-        return res.send({data: 'success'});
+        return res.send(chat.id);
     });
-    
+
     return router;
-    
+
 };
 

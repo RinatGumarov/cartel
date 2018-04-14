@@ -4,28 +4,8 @@ const logger = require('../../../utils/logger');
 
 module.exports.func = (router) => {
     
-    router.get('/languages', async (req, res) => {
-        try {
-            let languages = await userService.allLanguages(req.user);
-            res.json(languages);
-        } catch (err) {
-            logger.error(err.stack);
-            return res.status(500).send({error: 'Could not get user languages'});
-        }
-    });
-    
-    router.get('/search', async (req, res) => {
-        try {
-            let filter = req.body.filter;
-            return res.json(await userService.findAllByFilter(filter));
-        } catch (err) {
-            console.log(err.stack);
-            return res.status(500).send({error: 'search error'});
-        }
-    });
-
     router.get('/find', async (req, res) => {
-        let users = await userService.findAllByFilter(req.query.filter);
+        let users = await userService.findAllByFilter(req.query.filter, req.user);
         res.send(users);
     });
 
@@ -35,6 +15,11 @@ module.exports.func = (router) => {
         } catch (err) {
             logger.error(err.stack)
         }
+    });
+
+    router.get('/:id([0-9]+)', async (req,res) => {
+        let user = await userService.getUserById(req.params.id);
+        return res.send(user);
     });
 
     // router.post('/edit', async (req, res) => {

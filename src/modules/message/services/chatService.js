@@ -121,6 +121,12 @@ class ChatService {
                 userId: user.id
             }
         });
+        let chats = result[0];
+        for(let i = 0; i < chats.length; ++i){
+            chats[i].login = chats[i].login.includes('$_$')
+                ? chats[i].login.substring(0, chats[i].login.indexOf('$_$'))
+                : chats[i].login
+        }
         return result[0];
     }
 }

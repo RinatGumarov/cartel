@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
         createdAt: {
             type: DataTypes.DATE,
             field: "created_at"
-        }
+        },
+        name: DataTypes.STRING,
     }, {
         timestamps: false
     });

@@ -29,10 +29,10 @@ class MessageService {
             attributes: [
                 "id",
                 "text",
+                "name",
+                "senderId",
                 "createdAt",
                 "chatId",
-                "userId",
-                "status"
             ],
             // проверка на то что только авторизированный пользователь
             // может просматривать/обновлять сообшения
@@ -117,8 +117,9 @@ class MessageService {
      * @returns {Promise<void>}
      */
     async sendMessageToChat(user, chatId, text) {
-        // let chatUsers = await chatService.getChatUsers(chatId);
+        let chatUsers = await chatService.getChatUsers(chatId);
         let message = await Messages.create({
+            name: user.login,
             senderId: user.id,
             text: text,
             chatId: chatId
@@ -130,6 +131,12 @@ class MessageService {
         //         await socketSender.sendSocketMessage(`${chatUsers[i].id}:${chatId}:messages`, message);
         //     }
         // }
+        for (let i = 0; i < chatUsers.length; ++i) {
+            if (chatUsers[i].id !== user.id) {
+                await notificationService.sendNotification(chatUsers[i].id, `вам пришло новое сообшение`);
+                await socketSender.sendSocketMessage(`${chatUsers[i].id}:${chatId}:messages`, message);
+            }
+        }
         return message;
     }
     
