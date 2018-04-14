@@ -36,7 +36,7 @@ class UserService {
      * @returns {Promise<Model>}
      */
     async getUserById(id) {
-        let user = await Users.findOne({
+        let user = await models.users.findOne({
             where: {
                 id: {
                     [Op.eq]: id

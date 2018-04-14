@@ -145,10 +145,18 @@ class MessageService {
      * @returns {number}
      */
     generateCode() {
-        let generate = process.env.MAIL_GENERATE || this.mailConfig.generate;
-        let max = 1000000;
-        let min = 100000;
-        return (generate.toString() === 'true') ? (Math.floor(Math.random() * (max - min + 1)) + min) : 111111;
+        let text = "";
+        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let length = 32;
+        for(let i = 0; i < length; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
+        // let generate = process.env.MAIL_GENERATE || this.mailConfig.generate;
+        // let max = 1000000;
+        // let min = 100000;
+        // return Math.random().toString(36).substr(2);
+        // return (generate.toString() === 'true') ? (Math.floor(Math.random() * (max - min + 1)) + min) : 111111;
     }
     
 }

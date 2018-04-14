@@ -23,7 +23,7 @@ module.exports.func = (router) => {
      */
     router.post('/signup/verification', async (req, res) => {
         try {
-            if (req.session.verifyCode === parseInt(req.body.verifyCode)) {
+            if (req.session.verifyCode === req.body.verifyCode) {
                 let user = await usersService.getUserByEmail(req.session.email);
                 if (user) {
                     user.id = user.dataValues.id;
